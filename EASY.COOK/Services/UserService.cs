@@ -166,10 +166,14 @@ namespace EASY.COOK.Services
         public PagedResponse<List<User>> Users(string type, RequestFilters filter, string softField, string softType)
         {
             List<User> Users = _context.User.AsQueryable().Where(o => o != null).ToList();
-            if(type != null && !Constants.TYPE_ALL_FILTER.Equals(type))
+            if(type != null && !Constants.TYPE_ALL_FILTER.ToLower().Equals(type.ToLower()))
             {
-                var grp = _context.UserGroup.AsQueryable().Where(g => g != null && type.Equals(g.grp_type)).ToList();
-                Users = _context.User.AsQueryable().Where(o => grp != null && grp.Where(gr => gr.id == o.grp_id).Count() > 0).ToList();
+                var grp = _context.User_Group.AsQueryable().Where(g => g.grp_status == true && type.Equals(g.grp_type.ToString())).AsEnumerable();
+                if(grp.Count() > 0)
+                {
+                    Users = _context.User.AsQueryable().Where(o => o.grp_id != null && grp.Where(gr => o.grp_id != null && gr.id == o.grp_id).Count() > 0).ToList();
+                }
+                
             }    
             //fiter by condition
             if (filter != null)

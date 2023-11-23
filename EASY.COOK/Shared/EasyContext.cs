@@ -7,6 +7,6 @@ namespace EASY.COOK.Shared
     {
         public EasyContext(DbContextOptions<EasyContext> options) :base(options) { }
         public DbSet<User> User { get; set; }
-        public DbSet<UserGroup> UserGroup { get; set; }
+        public DbSet<UserGroup> User_Group { get; set; }
     }
 }
