@@ -34,12 +34,21 @@ namespace EASY.COOK.Services
             }
             //mapping data
             var user = new User();
+            user.grp_id = userRequest.grp_id;
             user.user_id = userRequest.user_id;
             if (!string.IsNullOrEmpty(userRequest.user_pass))
             {
                 user.user_pass = Utils.HashPassword(userRequest.user_pass);
             }
-            
+            user.user_name = userRequest.user_name;
+            user.user_birth = userRequest.user_birth;
+            user.user_gender = userRequest.user_gender;
+            user.user_address = userRequest.user_address;
+            user.user_email = userRequest.user_email;
+            user.user_phone = userRequest.user_phone;
+            user.user_image = userRequest.user_image;
+            user.user_status = userRequest.user_status;
+            user.create_date = DateTime.Now;
             //save data
             _context.User.Add(user);
             _context.SaveChanges();
@@ -80,7 +89,14 @@ namespace EASY.COOK.Services
                 {
                     updateUser.user_pass = Utils.HashPassword(userRequest.user_pass);
                 }
+                updateUser.grp_id = userRequest.grp_id != null ? userRequest.grp_id : updateUser.grp_id;
                 updateUser.user_name = userRequest.user_name != null ? userRequest.user_name : updateUser.user_name;
+                updateUser.user_birth = userRequest.user_birth != null ? userRequest.user_birth : updateUser.user_birth;
+                updateUser.user_gender = userRequest.user_gender != null ? userRequest.user_gender : updateUser.user_gender;
+                updateUser.user_address = userRequest.user_address != null ? userRequest.user_address : updateUser.user_address;
+                updateUser.user_phone = userRequest.user_phone != null ? userRequest.user_phone : updateUser.user_phone;
+                updateUser.user_email = userRequest.user_email != null ? userRequest.user_email : updateUser.user_email;
+                updateUser.user_status = userRequest.user_status != null ? userRequest.user_status : updateUser.user_status;
                 updateUser.update_date = DateTime.Now;
                 //save data
                 _context.User.Update(updateUser);
@@ -149,13 +165,11 @@ namespace EASY.COOK.Services
 
         public PagedResponse<List<User>> Users(string type, RequestFilters filter, string softField, string softType)
         {
-            List<User> Users = new List<User>();
-            if (type != null && Constants.TYPE_ALL_FILTER.ToUpper().Equals(type.ToUpper()))
+            List<User> Users = _context.User.AsQueryable().Where(o => o != null).ToList();
+            if(type != null && !Constants.TYPE_ALL_FILTER.Equals(type))
             {
-                Users = _context.User.AsQueryable().Where(o => o != null).ToList();
-            } else if(type != null && !Constants.TYPE_ALL_FILTER.Equals(type))
-            {
-                Users = _context.User.AsQueryable().Where(o => o != null).ToList();
+                var grp = _context.UserGroup.AsQueryable().Where(g => g != null && type.Equals(g.grp_type)).ToList();
+                Users = _context.User.AsQueryable().Where(o => grp != null && grp.Where(gr => gr.id == o.grp_id).Count() > 0).ToList();
             }    
             //fiter by condition
             if (filter != null)
