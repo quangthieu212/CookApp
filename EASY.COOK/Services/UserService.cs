@@ -4,6 +4,7 @@ using EASY.COOK.Shared;
 using EASY.COOK.Shared.Dtos.Requests;
 using EASY.COOK.Shared.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace EASY.COOK.Services
 {
@@ -195,73 +196,15 @@ namespace EASY.COOK.Services
                 }    
             }
             //sorter 
-            if (softType != null)
+            if (softType != null && softField != null)
             {
                 if (softType.Equals(Constants.ODER_ASC))
                 {
-                    switch (softField.ToLower())
-                    {
-                        case "id":
-                            Users = Users.OrderBy(n => n.id).ToList();
-                            break;
-                        case "user_id":
-                            Users = Users.OrderBy(n => n.user_id).ToList();
-                            break;
-                        case "user_name":
-                            Users = Users.OrderBy(n => n.user_name).ToList();
-                            break;
-                        case "user_phone":
-                            Users = Users.OrderBy(n => n.user_phone).ToList();
-                            break;
-                        case "user_birth":
-                            Users = Users.OrderBy(n => n.user_birth).ToList();
-                            break;
-                        case "user_gender":
-                            Users = Users.OrderBy(n => n.user_gender).ToList();
-                            break;
-                        case "user_address":
-                            Users = Users.OrderBy(n => n.user_address).ToList();
-                            break;
-                        case "user_email":
-                            Users = Users.OrderBy(n => n.user_email).ToList();
-                            break;
-                        default:
-                            Users = Users.OrderBy(n => n.id).ToList();
-                            break;
-                    }
+                    Users = Users.OrderBy(u => u?.GetType()?.GetProperty(softField)?.GetValue(u, null)).ToList();
                 }
                 else
                 {
-                    switch (softField.ToLower())
-                    {
-                        case "id":
-                            Users = Users.OrderByDescending(n => n.id).ToList();
-                            break;
-                        case "user_id":
-                            Users = Users.OrderByDescending(n => n.user_id).ToList();
-                            break;
-                        case "user_name":
-                            Users = Users.OrderByDescending(n => n.user_name).ToList();
-                            break;
-                        case "user_phone":
-                            Users = Users.OrderByDescending(n => n.user_phone).ToList();
-                            break;
-                        case "user_birth":
-                            Users = Users.OrderByDescending(n => n.user_birth).ToList();
-                            break;
-                        case "user_gender":
-                            Users = Users.OrderByDescending(n => n.user_gender).ToList();
-                            break;
-                        case "user_address":
-                            Users = Users.OrderByDescending(n => n.user_address).ToList();
-                            break;
-                        case "user_email":
-                            Users = Users.OrderByDescending(n => n.user_email).ToList();
-                            break;
-                        default:
-                            Users = Users.OrderByDescending(n => n.id).ToList();
-                            break;
-                    }
+                    Users = Users.OrderByDescending(u => u?.GetType()?.GetProperty(softField)?.GetValue(u, null)).ToList();
                 }    
             }
             //paging

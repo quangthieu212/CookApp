@@ -20,6 +20,133 @@ DROP DATABASE IF EXISTS `cook_solution`;
 CREATE DATABASE IF NOT EXISTS `cook_solution` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */;
 USE `cook_solution`;
 
+-- Dumping structure for table cook_solution.buy_detail
+DROP TABLE IF EXISTS `buy_detail`;
+CREATE TABLE IF NOT EXISTS `buy_detail` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `buy_plan_id` bigint(20) NOT NULL,
+  `ingredient_id` bigint(20) NOT NULL,
+  `quantity` decimal(18,2) DEFAULT NULL,
+  `actual_quantity` decimal(18,2) DEFAULT NULL,
+  `ingredient_status` char(1) DEFAULT NULL COMMENT '0: todo 1: progress 2:done',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table cook_solution.buy_detail: ~0 rows (approximately)
+DELETE FROM `buy_detail`;
+
+-- Dumping structure for table cook_solution.buy_plan
+DROP TABLE IF EXISTS `buy_plan`;
+CREATE TABLE IF NOT EXISTS `buy_plan` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `buy_name` varchar(255) DEFAULT NULL,
+  `buy_type` int(11) DEFAULT NULL COMMENT '0: chính, 1:bổ sung',
+  `buy_description` varchar(255) DEFAULT NULL,
+  `buy_date` timestamp NULL DEFAULT NULL,
+  `buy_creater` varchar(255) DEFAULT NULL,
+  `buy_status` bit(1) DEFAULT NULL COMMENT '1: active 0: unactive',
+  `create_date` timestamp NULL DEFAULT NULL,
+  `update_date` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table cook_solution.buy_plan: ~0 rows (approximately)
+DELETE FROM `buy_plan`;
+
+-- Dumping structure for table cook_solution.eat_detail
+DROP TABLE IF EXISTS `eat_detail`;
+CREATE TABLE IF NOT EXISTS `eat_detail` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `eat_plan_id` bigint(20) NOT NULL,
+  `menu_id` bigint(20) NOT NULL,
+  `quantity` decimal(18,2) DEFAULT NULL,
+  `actual_quantity` decimal(18,2) DEFAULT NULL,
+  `menu_status` char(1) DEFAULT NULL COMMENT '0: todo 1: progress 2:done',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table cook_solution.eat_detail: ~0 rows (approximately)
+DELETE FROM `eat_detail`;
+
+-- Dumping structure for table cook_solution.eat_plan
+DROP TABLE IF EXISTS `eat_plan`;
+CREATE TABLE IF NOT EXISTS `eat_plan` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `eat_name` varchar(255) DEFAULT NULL,
+  `eat_type` int(11) DEFAULT NULL COMMENT '0: dailly, 1: weekly, 2:monthly, 3:other',
+  `eat_description` varchar(255) DEFAULT NULL,
+  `eat_start_date` timestamp NULL DEFAULT NULL,
+  `eat_end_date` timestamp NULL DEFAULT NULL,
+  `eat_creater` varchar(255) DEFAULT NULL,
+  `eat_status` bit(1) DEFAULT NULL COMMENT '1: active 0: unactive',
+  `total_energy` decimal(18,2) DEFAULT NULL,
+  `create_date` timestamp NULL DEFAULT NULL,
+  `update_date` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table cook_solution.eat_plan: ~0 rows (approximately)
+DELETE FROM `eat_plan`;
+
+-- Dumping structure for table cook_solution.menu
+DROP TABLE IF EXISTS `menu`;
+CREATE TABLE IF NOT EXISTS `menu` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `menu_group` char(1) DEFAULT NULL COMMENT '0: món chính 1: món phụ 2: món tráng miệng',
+  `menu_request_type` char(1) DEFAULT NULL COMMENT '0: bt 1: ăn kiêng 2:ăn chay',
+  `menu_localtion_type` char(1) DEFAULT NULL COMMENT '0: VN 1: TQ 2:Châu Âu',
+  `menu_name` varchar(255) DEFAULT NULL,
+  `menu_img` varchar(255) DEFAULT NULL,
+  `menu_short_desc` varchar(255) DEFAULT NULL,
+  `menu_description` varchar(255) DEFAULT NULL,
+  `ingredient_ids` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL DEFAULT '' COMMENT '[ing_id_1,ing_id_2,...]',
+  `menu_refer` varchar(255) DEFAULT NULL,
+  `recipe_id` bigint(20) NOT NULL,
+  `menu_energy` decimal(18,2) DEFAULT NULL,
+  `create_date` timestamp NULL DEFAULT NULL,
+  `update_date` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table cook_solution.menu: ~0 rows (approximately)
+DELETE FROM `menu`;
+
+-- Dumping structure for table cook_solution.notification
+DROP TABLE IF EXISTS `notification`;
+CREATE TABLE IF NOT EXISTS `notification` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` varchar(60) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL DEFAULT '',
+  `not_type` int(11) DEFAULT NULL COMMENT '0: regular, 1: not regular',
+  `not_content` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL DEFAULT '',
+  `not_status` bit(1) DEFAULT NULL COMMENT '1: send 0: not send',
+  `create_date` timestamp NULL DEFAULT NULL,
+  `update_date` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table cook_solution.notification: ~0 rows (approximately)
+DELETE FROM `notification`;
+
+-- Dumping structure for table cook_solution.recipe
+DROP TABLE IF EXISTS `recipe`;
+CREATE TABLE IF NOT EXISTS `recipe` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `rec_type` char(1) DEFAULT NULL COMMENT '0: bt 1: món nóng 2: món lạnh',
+  `rec_name` varchar(255) DEFAULT NULL,
+  `rec_description` varchar(255) DEFAULT NULL,
+  `rec_img` varchar(255) DEFAULT NULL,
+  `rec_energy` decimal(18,2) DEFAULT NULL,
+  `rec_time_prepare` decimal(18,2) DEFAULT NULL COMMENT 'thời gian chuẩn bị ước tính theo phút',
+  `rec_time_practice` decimal(18,2) DEFAULT NULL COMMENT 'thời gian nấu ước tính theo phút',
+  `rec_num_persion` int(11) DEFAULT NULL COMMENT 'đủ cho số người ăn',
+  `create_date` timestamp NULL DEFAULT NULL,
+  `update_date` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table cook_solution.recipe: ~0 rows (approximately)
+DELETE FROM `recipe`;
+
 -- Dumping structure for table cook_solution.role
 DROP TABLE IF EXISTS `role`;
 CREATE TABLE IF NOT EXISTS `role` (
@@ -61,13 +188,30 @@ DELETE FROM `user`;
 INSERT INTO `user` (`id`, `user_id`, `user_pass`, `user_name`, `user_phone`, `user_birth`, `user_gender`, `create_date`, `update_date`, `user_address`, `user_email`, `user_image`, `user_status`, `grp_id`) VALUES
 	(1, 'admin', '$2a$11$Ks6K/EEAdoxi1vVzNzKn9OoQsPM3fM20o3UfaGzOktdWHwZDMxzg6', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
 
+-- Dumping structure for table cook_solution.user_allergy_favorite
+DROP TABLE IF EXISTS `user_allergy_favorite`;
+CREATE TABLE IF NOT EXISTS `user_allergy_favorite` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` varchar(60) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL DEFAULT '',
+  `menu_id` bigint(20) NOT NULL,
+  `ingredient_id` bigint(20) NOT NULL,
+  `priority` char(1) DEFAULT NULL COMMENT '0: normal 1: medium 2:high',
+  `af_type` bit(1) DEFAULT NULL COMMENT '1: allergy 0: favorite',
+  `create_date` timestamp NULL DEFAULT NULL,
+  `update_date` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table cook_solution.user_allergy_favorite: ~0 rows (approximately)
+DELETE FROM `user_allergy_favorite`;
+
 -- Dumping structure for table cook_solution.user_group
 DROP TABLE IF EXISTS `user_group`;
 CREATE TABLE IF NOT EXISTS `user_group` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `grp_name` varchar(255) DEFAULT NULL,
-  `grp_type` int(11) DEFAULT NULL,
-  `grp_level` int(11) DEFAULT NULL,
+  `grp_type` int(11) DEFAULT NULL COMMENT '0: Admin, 1: supervisor, 2: user',
+  `grp_level` int(11) DEFAULT NULL COMMENT '0: normal, 1: VIP',
   `create_date` timestamp NULL DEFAULT NULL,
   `update_date` timestamp NULL DEFAULT NULL,
   `grp_description` varchar(255) DEFAULT NULL,
@@ -75,7 +219,7 @@ CREATE TABLE IF NOT EXISTS `user_group` (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table cook_solution.user_group: ~0 rows (approximately)
+-- Dumping data for table cook_solution.user_group: ~3 rows (approximately)
 DELETE FROM `user_group`;
 INSERT INTO `user_group` (`id`, `grp_name`, `grp_type`, `grp_level`, `create_date`, `update_date`, `grp_description`, `grp_status`) VALUES
 	(1, 'Admin', 0, 0, '2023-11-23 07:58:17', '2023-11-23 07:58:18', NULL, b'1'),
@@ -83,11 +227,48 @@ INSERT INTO `user_group` (`id`, `grp_name`, `grp_type`, `grp_level`, `create_dat
 	(3, 'Normal User', 2, 0, '2023-11-23 08:00:40', NULL, 'Hội viên thường', b'1'),
 	(4, 'VIP User', 2, 1, '2023-11-23 08:01:31', NULL, 'Hội viên VIP', b'1');
 
+-- Dumping structure for table cook_solution.user_health
+DROP TABLE IF EXISTS `user_health`;
+CREATE TABLE IF NOT EXISTS `user_health` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` varchar(60) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL DEFAULT '',
+  `heal_bmi` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL DEFAULT '',
+  `heal_beat` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL DEFAULT '',
+  `blood_pressure` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL DEFAULT '',
+  `calo_use` decimal(18,2) DEFAULT NULL,
+  `heal_evalue` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL DEFAULT '',
+  `menu_suggestion` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL DEFAULT '',
+  `create_date` timestamp NULL DEFAULT NULL,
+  `update_date` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table cook_solution.user_health: ~0 rows (approximately)
+DELETE FROM `user_health`;
+
+-- Dumping structure for table cook_solution.user_payment
+DROP TABLE IF EXISTS `user_payment`;
+CREATE TABLE IF NOT EXISTS `user_payment` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` varchar(60) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL DEFAULT '',
+  `amount` decimal(18,2) DEFAULT NULL,
+  `pay_method` varchar(100) DEFAULT NULL,
+  `pay_status` bit(1) DEFAULT NULL COMMENT '1: active 0: unactive',
+  `pay_description` varchar(255) DEFAULT NULL,
+  `create_date` timestamp NULL DEFAULT NULL,
+  `update_date` timestamp NULL DEFAULT NULL,
+  `vou_ids` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL DEFAULT '' COMMENT '[vou_id_1,vou_id_2,...]',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table cook_solution.user_payment: ~0 rows (approximately)
+DELETE FROM `user_payment`;
+
 -- Dumping structure for table cook_solution.user_role
 DROP TABLE IF EXISTS `user_role`;
 CREATE TABLE IF NOT EXISTS `user_role` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `rol_id` bigint(20) unsigned NOT NULL,
+  `rol_id` bigint(20) NOT NULL,
   `user_id` varchar(60) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL DEFAULT '',
   `create_date` timestamp NULL DEFAULT NULL,
   `update_date` timestamp NULL DEFAULT NULL,
@@ -96,6 +277,23 @@ CREATE TABLE IF NOT EXISTS `user_role` (
 
 -- Dumping data for table cook_solution.user_role: ~0 rows (approximately)
 DELETE FROM `user_role`;
+
+-- Dumping structure for table cook_solution.voucher
+DROP TABLE IF EXISTS `voucher`;
+CREATE TABLE IF NOT EXISTS `voucher` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `vou_name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL DEFAULT '',
+  `vou_value` decimal(18,2) DEFAULT NULL,
+  `vou_quantity` decimal(18,2) DEFAULT NULL,
+  `vou_type` int(11) DEFAULT NULL COMMENT '0: normal, 1: limit time, 2: limit quantity',
+  `vou_end_date` timestamp NULL DEFAULT NULL,
+  `create_date` timestamp NULL DEFAULT NULL,
+  `update_date` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table cook_solution.voucher: ~0 rows (approximately)
+DELETE FROM `voucher`;
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
