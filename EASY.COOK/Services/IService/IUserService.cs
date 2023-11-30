@@ -7,9 +7,9 @@ namespace EASY.COOK.Services.IService
 {
     public interface IUserService
     {
-        public ApiResponse<User> Register(UserRequest userRequest, IFormFile? files, IFormFile? files1);
+        public ApiResponse<User> Register(UserRequest userRequest, IFormFile? files);
 
-        public ApiResponse<User> UpdateUser(long id, UserRequest userRequest, IFormFile? files, IFormFile? files1);
+        public ApiResponse<User> UpdateUser(long id, UserRequest userRequest, IFormFile? files);
 
         public Boolean DelUser(long id);
 
@@ -21,6 +21,8 @@ namespace EASY.COOK.Services.IService
 
         public ApiResponse<User> getByUserName(string name);
 
+        public ApiResponse<User> SetUserRole(string user_id, List<long> roleids);
 
+        public ApiResponse<UserGroup> SetGrpRole(long grp_id, List<long> roleids);
     }
 }

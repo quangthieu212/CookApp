@@ -10,7 +10,7 @@
         //message
         public const string Confict_Message = "Bạn đã đăng ký. Vui lòng đăng nhập\n user_name:";
         public const string Login_Fail_Message = "Sai user_name hoặc password. Vui lòng đăng nhập lại";
-        public const string NotFound_Message = "Không tìm thấy dữ liệu";
+        public const string NotFound_Message = "Không tìm thấy dữ liệu ";
         public const string Login_Success_Message = "Đăng nhập thành công.";
         public const string Register_Success_Message = "Đăng ký thành công.";
         public const string Add_Success_Message = "Thêm mới thành công.";

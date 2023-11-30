@@ -18,13 +18,13 @@ namespace EASY.COOK.Services
             _context = eContext;
             _fileStorageService = fileStorageService;
         }
-        public ApiResponse<User> Register(UserRequest userRequest, IFormFile? files, IFormFile? files1)
+        public ApiResponse<User> Register(UserRequest userRequest, IFormFile? files)
         {
             ApiResponse<User> response = new ApiResponse<User>();
             response.isSuccess = true;
             response.Code = StatusCodes.Status200OK.ToString();
             //validate data
-            var existingUser = _context.User.AsQueryable().Where(o => o.user_id != userRequest.user_id).FirstOrDefault();
+            var existingUser = _context.User.AsQueryable().Where(o => o.user_id == userRequest.user_id).FirstOrDefault();
             if (existingUser != null)
             {
                 response.isSuccess = false;
@@ -68,7 +68,7 @@ namespace EASY.COOK.Services
             return response;
         }
  
-        public ApiResponse<User> UpdateUser(long id, UserRequest userRequest, IFormFile? files, IFormFile? files1)
+        public ApiResponse<User> UpdateUser(long id, UserRequest userRequest, IFormFile? files)
         {
             ApiResponse<User> response = new ApiResponse<User>();
             response.isSuccess = true;
@@ -123,6 +123,15 @@ namespace EASY.COOK.Services
             } 
             else
             {
+                //clear role
+                var roles = _context.User_Role.AsQueryable().Where(o => o.user_id.Equals(delUser.user_id)).AsEnumerable();
+                if (roles != null && roles.Any() )
+                {
+                    foreach ( var role in roles )
+                    {
+                        _context.User_Role.Remove(role);
+                    }
+                }
                 _context.User.Remove(delUser);
                 var save = _context.SaveChanges();
                 if(save < 1)
@@ -149,6 +158,23 @@ namespace EASY.COOK.Services
                     response.Code = StatusCodes.Status400BadRequest.ToString();
                     response.Data = existingUser;
                     return response;
+                } else
+                {
+                    //get role of user
+                    List<Role> roles = new List<Role>();
+                    var user_roles = _context.User_Role.AsQueryable().Where(o => o.user_id.Equals(existingUser.user_id)).AsEnumerable();
+                    if (user_roles != null && user_roles.Any())
+                    {
+                        foreach (var role in user_roles)
+                        {
+                            var roleItem = _context.Role.AsQueryable().Where(r => r.id == role.rol_id && r.rol_status == true).FirstOrDefault();
+                            if (roleItem != null)
+                            {
+                                roles.Add(roleItem);
+                            }
+                        }
+                        existingUser.roles = roles;
+                    }
                 }
             }
             else
@@ -167,7 +193,8 @@ namespace EASY.COOK.Services
         public PagedResponse<List<User>> Users(string type, RequestFilters filter, string softField, string softType)
         {
             List<User> Users = _context.User.AsQueryable().Where(o => o != null).ToList();
-            if(type != null && !Constants.TYPE_ALL_FILTER.ToLower().Equals(type.ToLower()))
+            //search by group type: 0: Admin, 1: supervisor, 2: user
+            if (type != null && !Constants.TYPE_ALL_FILTER.ToLower().Equals(type.ToLower()))
             {
                 var grp = _context.User_Group.AsQueryable().Where(g => g.grp_status == true && type.Equals(g.grp_type.ToString())).AsEnumerable();
                 if(grp.Count() > 0)
@@ -224,14 +251,32 @@ namespace EASY.COOK.Services
             ApiResponse<User> response = new ApiResponse<User>();
             response.isSuccess = true;
             response.Code = StatusCodes.Status200OK.ToString();
-            var User = _context.User.AsQueryable().Where(o => o.id == id).FirstOrDefault();
-            if(User == null)
+            var user = _context.User.AsQueryable().Where(o => o.id == id).FirstOrDefault();
+            if(user == null)
             {
                 response.isSuccess = false;
                 response.Message = Constants.NotFound_Message;
                 response.Code = StatusCodes.Status404NotFound.ToString();
             }
-            response.Data = User;
+            else
+            {
+                //get role of user
+                List<Role> roles = new List<Role>();
+                var user_roles = _context.User_Role.AsQueryable().Where(o => o.user_id.Equals(user.user_id)).AsEnumerable();
+                if (user_roles != null && user_roles.Any())
+                {
+                    foreach (var role in user_roles)
+                    {
+                        var roleItem = _context.Role.AsQueryable().Where(r => r.id == role.rol_id && r.rol_status == true).FirstOrDefault();
+                        if (roleItem != null)
+                        {
+                            roles.Add(roleItem);
+                        }
+                    }
+                    user.roles = roles;
+                }
+            }
+            response.Data = user;
             return response;
         }
         
@@ -240,14 +285,111 @@ namespace EASY.COOK.Services
             ApiResponse<User> response = new ApiResponse<User>();
             response.isSuccess = true;
             response.Code = StatusCodes.Status200OK.ToString();
-            var User = _context.User.AsQueryable().Where(o => o.user_id.ToLower().Equals(name.ToLower())).FirstOrDefault();
-            if (User == null)
+            var user = _context.User.AsQueryable().Where(o => o.user_id.ToLower().Equals(name.ToLower())).FirstOrDefault();
+            if (user == null)
             {
                 response.isSuccess = false;
                 response.Message = Constants.NotFound_Message;
                 response.Code = StatusCodes.Status404NotFound.ToString();
             }
-            response.Data = User;
+            else
+            {
+                //get role of user
+                List<Role> roles = new List<Role>();
+                var user_roles = _context.User_Role.AsQueryable().Where(o => o.user_id.Equals(user.user_id)).AsEnumerable();
+                if (user_roles != null && user_roles.Any())
+                {
+                    foreach (var role in user_roles)
+                    {
+                        var roleItem = _context.Role.AsQueryable().Where(r => r.id == role.rol_id && r.rol_status == true).FirstOrDefault();
+                        if (roleItem != null)
+                        {
+                            roles.Add(roleItem);
+                        }
+                    }
+                    user.roles = roles;
+                }
+            }
+            response.Data = user;
+            return response;
+        }
+        public ApiResponse<User> SetUserRole(string user_id, List<long> roleids)
+        {
+            ApiResponse<User> response = new ApiResponse<User>();
+            response.isSuccess = true;
+            response.Code = StatusCodes.Status200OK.ToString();
+            var user = _context.User.AsQueryable().Where(u => u.user_id == user_id).FirstOrDefault();
+            if (user != null && roleids != null && roleids.Any())
+            {
+                List<Role> roleList = new List<Role>();
+                foreach (var rol_id in roleids)
+                {
+                    //check exists
+                    if(_context.User_Role.AsQueryable().Where(ur => ur.rol_id == rol_id && ur.user_id == user_id).FirstOrDefault() != null)
+                    {
+                        continue;
+                    }
+                    UserRole userRole = new UserRole();
+                    userRole.user_id = user_id;
+                    userRole.rol_id = rol_id;
+                    userRole.create_date = DateTime.Now;
+                    _context.User_Role.Add(userRole);
+                    var role = _context.Role.AsQueryable().Where(r=> r.id == rol_id).FirstOrDefault();
+                    if(role != null)
+                    {
+                        roleList.Add(role);
+                    }
+                }
+                _context.SaveChanges();
+                user.roles = roleList;
+                response.Data = user;
+            }
+            else
+            {
+                response.isSuccess = false;
+                response.Message = Constants.NotFound_Message + user_id;
+                response.Code = StatusCodes.Status404NotFound.ToString();
+                return response;
+            }
+            return response;
+        }
+        public ApiResponse<UserGroup> SetGrpRole(long grp_id, List<long> roleids)
+        {
+            ApiResponse<UserGroup> response = new ApiResponse<UserGroup>();
+            response.isSuccess = true;
+            response.Code = StatusCodes.Status200OK.ToString();
+            var grp = _context.User_Group.AsQueryable().Where(gr => gr.id == grp_id).FirstOrDefault();
+            var users = _context.User.AsQueryable().Where(u => u.grp_id == grp_id).AsEnumerable();
+            if(grp != null)
+            {
+                response.Data = grp;
+                if(users != null && users.Any())
+                {
+                    string errors = "";
+                    foreach(var user in users)
+                    {
+                        var result = SetUserRole(user.user_id, roleids);
+                        if(result == null || result.isSuccess == false)
+                        {
+                            errors = string.Concat(errors, result?.Message, ",");
+                        }   
+                    }
+                    if(!string.IsNullOrEmpty(errors))
+                    {
+                        response.isSuccess = false;
+                        response.Message = errors;
+                        response.Code = StatusCodes.Status400BadRequest.ToString();
+                        return response;
+                    }
+                }   
+            }
+            else
+            {
+                response.isSuccess = false;
+                response.Message = Constants.NotFound_Message + grp_id.ToString();
+                response.Code = StatusCodes.Status404NotFound.ToString();
+                return response;
+            }
             return response;
         }
     }

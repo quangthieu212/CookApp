@@ -26,22 +26,22 @@ namespace EASY.COOK.Controllers
         }
         [HttpPost]
         [Route(Constants.Register_Api)]
-        public IActionResult Register([FromForm] string jsonString, IFormFile? files, IFormFile? files1)
+        public IActionResult Register([FromForm] string jsonString, IFormFile? files)
         {
             if (jsonString == null)
                 return NoContent();
             UserRequest userRequest = (UserRequest)Utils.setDirUpload(jsonString, _configuration, nameof(UserRequest));
-            var response = _userService.Register(userRequest, files, files1);
+            var response = _userService.Register(userRequest, files);
             return Convert(response.Code, response, response.Data);
         }
         [HttpPut]
         [Route(Constants.Update_Api)]
-        public IActionResult UpdateUser(long id, [FromForm] string jsonString, IFormFile? files, IFormFile? files1)
+        public IActionResult UpdateUser(long id, [FromForm] string jsonString, IFormFile? files)
         {
             if (jsonString == null)
                 return NoContent();
             UserRequest userRequest = (UserRequest)Utils.setDirUpload(jsonString, _configuration, nameof(UserRequest));
-            var response = _userService.UpdateUser(id, userRequest, files, files1);
+            var response = _userService.UpdateUser(id, userRequest, files);
             return Convert(response.Code, response, response.Data);
         } 
         [HttpDelete]
@@ -61,16 +61,24 @@ namespace EASY.COOK.Controllers
         public IActionResult Login([FromBody] LoginRequest loginRequest)
         {
             var response = _userService.Login(loginRequest);
+            if(response == null || response.Data == null) return NoContent();
             var claims = new[]
             {
                 new Claim(ClaimTypes.Name, loginRequest.user_id),
             };
             var jwtResult = _jwtAuthManager.GenerateTokens(loginRequest.user_id, claims, DateTime.Now);
+            var sroles = "";
+            if(response.Data.roles != null) {
+                foreach (var role in response.Data.roles)
+                {
+                    sroles = string.Concat(sroles, role.rol_name, ",");
+                }
+            }
             var authRes = new AuthResponse
             {
                 UserName = loginRequest.user_id,
-                DisplayName = response.Data.user_name,
-                Role = string.Empty,
+                DisplayName = response?.Data?.user_name,
+                Role = sroles,
                 AccessToken = jwtResult.AccessToken,
                 RefreshToken = jwtResult.RefreshToken.TokenString,
             };

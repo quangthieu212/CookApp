@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EASY.COOK.Shared.Models
 {
@@ -15,6 +16,8 @@ namespace EASY.COOK.Shared.Models
         public string? user_email { get; set; }
         public string? user_image { get; set; }
         public bool? user_status { get; set; }
+        [NotMapped]
+        public List<Role> roles { get; set; }
 
     }
 }
