@@ -1,0 +1,40 @@
+﻿@inherits LayoutComponentBase
+@using Constants
+@using CMS.Shared.ViewModels
+<CheckLogin></CheckLogin>
+@if (IsLogin)
+{
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        @Body
+    </div>
+    <!-- /.content-wrapper -->
+}
+
+@code {
+    public bool IsLogin { get; set; } = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        SessionInfo session = await Session.GetItemAsync<SessionInfo>(AppConstant.SESSION_LOGIN);
+
+        if (session != null)
+        {
+            IsLogin = true;
+            StateHasChanged();
+            await Javascript.InvokeVoidAsync("OnLoad");
+        }
+        //else
+        //{
+        //    await Javascript.InvokeVoidAsync("redirect", "/index2.html");
+        //}
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        SessionInfo session = await Session.GetItemAsync<SessionInfo>(AppConstant.SESSION_LOGIN);
+        var uri = Route.ToAbsoluteUri(Route.Uri);
+        string url = uri.OriginalString;
+
+    }
+}

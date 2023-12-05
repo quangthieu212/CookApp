@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="DB\**" />
+    <Compile Remove="Development\**" />
+    <Compile Remove="output\**" />
+    <EmbeddedResource Remove="DB\**" />
+    <EmbeddedResource Remove="Development\**" />
+    <EmbeddedResource Remove="output\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="C:\Users\Admin\.nuget\packages\mysql.data.entityframework\8.1.0\contentFiles\any\netstandard2.1\app.config.transform" />
+    <Content Remove="C:\Users\Admin\.nuget\packages\mysql.data.entityframework\8.1.0\contentFiles\any\netstandard2.1\web.config.transform" />
+  </ItemGroup>
+
+
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="5.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.6">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
+    <PackageReference Include="MySql.Data.EntityFramework" Version="8.1.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+	<ProjectReference Include="..\Client\COOK.CMS.Client.csproj" />
+    <ProjectReference Include="..\Shared\COOK.CMS.Shared.csproj" />
+    <ProjectReference Include="..\Business\COOK.CMS.Business.csproj" />
+  </ItemGroup>
+
+</Project>

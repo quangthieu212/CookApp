@@ -1,0 +1,24 @@
+﻿<div class="form-group @Width @Class">
+    <label for="@For" class="@LableWidth">@Lable</label>
+    <div class="@FieldWidth">
+        @Body
+    </div>
+</div>
+@code {
+    [Parameter]
+    public String LableWidth { get; set; } = "";
+    [Parameter]
+    public String FieldWidth { get; set; } = "";
+    [Parameter]
+    public String Width { get; set; } = "";
+    [Parameter]
+    public String Class { get; set; } = "";
+    [Parameter]
+    public String For { get; set; } = "";
+
+    [Parameter]
+    public RenderFragment Body { get; set; }
+
+    [Parameter]
+    public RenderFragment Lable { get; set; }
+}

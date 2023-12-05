@@ -1,0 +1,13 @@
+﻿@using Constants
+@using CMS.Shared.ViewModels
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        SessionInfo session = await Session.GetItemAsync<SessionInfo>(AppConstant.SESSION_LOGIN);
+
+        if (session == null)
+        {
+            await Javascript.InvokeVoidAsync("redirect", "/login");
+        }
+    }
+}

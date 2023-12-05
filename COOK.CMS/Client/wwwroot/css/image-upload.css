@@ -1,0 +1,88 @@
+﻿.gallery .box-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.gallery .box-container .box {
+    flex: 1 1 30rem;
+    border: 0.5rem solid #fff;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    border-radius: 0.5rem;
+    position: relative;
+    /* overflow: hidden; */
+    padding: 0;
+}
+
+.gallery .box-container .box .actions {
+    width: 10%;
+    display: flex;
+    flex-flow: column wrap;
+    /* padding-top: 0.5rem; */
+}
+
+.gallery .box-container .box .actions > div {
+    width: 100%;
+    margin-bottom: 0.2rem;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
+.gallery .box-container .box .actions .ck-main {
+    height: 1rem;
+}
+
+.gallery .box-container .box .actions .btn-photo-del {
+
+}
+
+.gallery .box-container .box .actions .btn-photo-del button {
+    width: 100%;
+    height: 1.2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    font-size: 0.8rem !important;
+}
+
+.gallery .box-container .box input[type="checkbox"]::before {
+    background: linear-gradient(to top, #e6e6e6 0px, #fff 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+    color: #5CB85C;
+    border: 1px solid #5CB85C;
+    border-radius: 0.2rem;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    content: '';
+}
+
+.gallery .box-container .box input[type="checkbox"]:disabled::before {
+    content: '✓';
+    font-weight: bold;
+}
+
+.gallery .box-container .box img {
+    width: 90%;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+}
+
+.gallery .box-container .box .content {
+    position: absolute;
+    top: -130%;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 2rem;
+    padding-top: 5rem;
+    text-align: center;
+}
+
+.gallery .box-container .box:hover .content {
+    top: 0;
+}

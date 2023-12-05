@@ -1,0 +1,15 @@
+﻿@page "/"
+
+<h1>HỆ THỐNG QUẢN TRỊ COOK</h1>
+
+@code {
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await Init();
+        }
+    }
+
+}
