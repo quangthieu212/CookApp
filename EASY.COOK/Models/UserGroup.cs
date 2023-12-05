@@ -1,4 +1,4 @@
-﻿namespace EASY.COOK.Shared.Models
+﻿namespace EASY.COOK.Models
 {
     public class UserGroup : BaseModel
     {

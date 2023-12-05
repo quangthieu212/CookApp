@@ -1,9 +1,8 @@
-﻿using EASY.COOK.Services.IService;
+﻿using EASY.COOK.Models;
+using EASY.COOK.Services.IService;
 using EASY.COOK.Share.Dtos.Responses;
 using EASY.COOK.Shared;
 using EASY.COOK.Shared.Dtos.Requests;
-using EASY.COOK.Shared.Models;
-using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 namespace EASY.COOK.Services
@@ -390,6 +389,27 @@ namespace EASY.COOK.Services
                 response.Code = StatusCodes.Status404NotFound.ToString();
                 return response;
             }
+            return response;
+        }
+        public ApiResponse<Role> AddRole(RoleRequest roleRequest)
+        {
+            ApiResponse<Role> response = new ApiResponse<Role>();
+            response.isSuccess = true;
+            response.Code = StatusCodes.Status200OK.ToString();
+            //validate data
+            var existingRole = _context.Role.AsQueryable().Where(r => r.rol_name == roleRequest.rol_name && r.rol_controller == roleRequest.rol_controller).FirstOrDefault();
+            if (existingRole != null)
+            {
+                response.isSuccess = false;
+                response.Message = "Nội dung cần thêm đã tồn tại";
+                response.Code = StatusCodes.Status409Conflict.ToString();
+                response.Data = existingRole;
+                return response;
+            }
+            var role = new Role(roleRequest.rol_name, roleRequest.is_menu, roleRequest.rol_icon, roleRequest.rol_controller, roleRequest.rol_order, roleRequest.rol_status);
+            _context.Add(role);
+            _context.SaveChanges();
+            response.Data= role; 
             return response;
         }
     }

@@ -1,7 +1,7 @@
 ﻿
+using EASY.COOK.Models;
 using EASY.COOK.Share.Dtos.Responses;
 using EASY.COOK.Shared.Dtos.Requests;
-using EASY.COOK.Shared.Models;
 
 namespace EASY.COOK.Services.IService
 {
@@ -24,5 +24,6 @@ namespace EASY.COOK.Services.IService
         public ApiResponse<User> SetUserRole(string user_id, List<long> roleids);
 
         public ApiResponse<UserGroup> SetGrpRole(long grp_id, List<long> roleids);
+        public ApiResponse<Role> AddRole(RoleRequest roleRequest);
     }
 }

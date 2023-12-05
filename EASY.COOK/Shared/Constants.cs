@@ -31,7 +31,13 @@
         public const string Del_Category_Api = "deleteCate/{id}";
         public const string List_Category_Api = "Categories";
         public const string GetCatById_Api = "getCatById/{id}";
-       
+        //Role
+        public const string Add_Role_Api = "addRole";
+        public const string Update_Role_Api = "updateRole/{id}";
+        public const string Del_Role_Api = "deleteRole/{id}";
+        public const string List_Role_Api = "Roles";
+        public const string GetRoleById_Api = "getRoleById/{id}";
+
         //File
         public const string File_Api = "uploadFile";
         public const string Multi_File_Api = "uploadMultiFile";

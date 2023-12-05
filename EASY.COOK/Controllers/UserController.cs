@@ -5,7 +5,6 @@ using EASY.COOK.Share.Dtos.Responses;
 using EASY.COOK.Shared;
 using EASY.COOK.Shared.Dtos;
 using EASY.COOK.Shared.Dtos.Requests;
-using EASY.COOK.Shared.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -104,6 +103,13 @@ namespace EASY.COOK.Controllers
         public IActionResult GetUserByName(string name)
         {
             var response = _userService.getByUserName(name);
+            return Convert(response.Code, response, response.Data);
+        }
+        [HttpPost]
+        [Route(Constants.Add_Role_Api)]
+        public IActionResult AddRole(RoleRequest request)
+        {
+            var response = _userService.AddRole(request);
             return Convert(response.Code, response, response.Data);
         }
     }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EASY.COOK.Shared.Models
+namespace EASY.COOK.Models
 {
     public class BaseModel
     {

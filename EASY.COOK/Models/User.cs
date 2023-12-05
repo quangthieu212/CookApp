@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace EASY.COOK.Shared.Models
+namespace EASY.COOK.Models
 {
     public class User : BaseModel
     {

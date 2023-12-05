@@ -1,7 +1,16 @@
-﻿namespace EASY.COOK.Shared.Models
+﻿namespace EASY.COOK.Models
 {
     public class Role
     {
+        public Role(string name, bool isMenu,string icon, string controller, short order, bool status)
+        {
+            rol_name = name;
+            is_menu = isMenu;
+            rol_icon = icon;
+            rol_controller = controller;
+            rol_order = order;
+            rol_status = status;
+        }
         public long id { get; set; }
         public string rol_name { get; set; }
         public bool is_menu { get; set; }
