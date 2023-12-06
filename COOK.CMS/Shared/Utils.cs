@@ -1,4 +1,7 @@
-﻿using System;
+﻿using COOK.CMS.Shared.Dtos.Requests;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using System;
 
 namespace COOK.CMS.Shared
 {
@@ -21,6 +24,19 @@ namespace COOK.CMS.Shared
         {
             bool verified = BCrypt.Net.BCrypt.Verify(input, hash);
             return verified;
+        }
+        public static object setDirUpload(string jsonString, string dir, string objName)
+        {
+            object obj = new object();
+            switch (objName)
+            {
+                case nameof(UserRequest):
+                    UserRequest userRequest = JsonConvert.DeserializeObject<UserRequest>(jsonString);
+                    userRequest.uploadDir = dir;
+                    obj = userRequest;
+                    break;
+            }
+            return obj;
         }
     }
 }

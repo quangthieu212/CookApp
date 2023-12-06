@@ -1,13 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
 
-namespace COOK.CMS.Shared.Models
+namespace COOK.CMS.Shared.Dtos.Requests
 {
-    public class User : BaseModel
+    public class UserRequest
     {
+        public long? id {  get; set; }
         public long? grp_id { get; set; }
-        public string user_id{ get; set; }
+        public string user_id { get; set; }
         public string user_pass { get; set; }
         public string? user_name { get; set; }
         public DateTime? user_birth { get; set; }
@@ -17,8 +16,6 @@ namespace COOK.CMS.Shared.Models
         public string? user_email { get; set; }
         public string? user_image { get; set; }
         public bool? user_status { get; set; }
-        [NotMapped]
-        public List<Role> roles { get; set; }
-
+        public string? uploadDir { get; set; } = "/opt/tempfile/uploads/";
     }
 }

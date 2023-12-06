@@ -14,7 +14,7 @@ function RunDataTables(tableId) {
 
 function searchForm() {
     var data = $(".saa-search-form").serialize();
-    var table = $(".sam-datatables").DataTable();
+    var table = $(".cook-datatables").DataTable();
     let url = table.ajax.url() + "?" + data;
 
     table.ajax.url(url);
@@ -24,7 +24,7 @@ function searchForm() {
 
 function RunDataTablesSever(tableId,uri,columneDefine) {
     const table = document.getElementById(tableId);
-    $(".sam-datatables").DataTable(
+    $(".cook-datatables").DataTable(
         {
             "responsive": true,
             "ordering": true,

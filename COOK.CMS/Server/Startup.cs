@@ -63,6 +63,13 @@ namespace COOK.CMS.Server
 
             app.UseRouting();
 
+            //app.UseCors(apiCorsPolicy);
+            app.UseCors(x => x
+                            .AllowAnyMethod()
+                            .AllowAnyHeader()
+                            .SetIsOriginAllowed(origin => true) // allow any origin
+                            .AllowCredentials()); // allow credentials
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();

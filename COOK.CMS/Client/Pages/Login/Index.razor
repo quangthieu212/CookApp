@@ -9,7 +9,7 @@
         </div>
     }
     <div class="input-group mb-3">
-        <input type="text" name="@nameof(_loginForm.UserName)" @bind-value="_loginForm.UserName" class="form-control">
+        <input type="text" name="@nameof(_loginRequest.user_id)" @bind-value="_loginRequest.user_id" class="form-control">
         <div class="input-group-append">
             <div class="input-group-text">
                 <span class="fas fa-user"></span>
@@ -17,7 +17,7 @@
         </div>
     </div>
     <div class="input-group mb-3">
-        <input type="password" name="@nameof(_loginForm.Password)" @bind-value="_loginForm.Password" class="form-control">
+        <input type="password" name="@nameof(_loginRequest.user_pass)" @bind-value="_loginRequest.user_pass" class="form-control">
         <div class="input-group-append">
             <div class="input-group-text">
                 <span class="fas fa-lock"></span>
@@ -44,13 +44,3 @@
         <!-- /.col -->
     </div>
 </form>
-
-@code {
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await Init();
-        }
-    }
-}

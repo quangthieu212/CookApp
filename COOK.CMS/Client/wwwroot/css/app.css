@@ -42,14 +42,14 @@
     -moz-border-radius: 0 !important;
     border-radius: 0 !important;
 }
-.sam-datatables {
+.cook-datatables {
     width: 100% !important;
     border-collapse: collapse !important;
 }
-.sam-datatables td, sam-datatables th {
+.cook-datatables td, cook-datatables th {
     padding: 4px;
 }
-.sam-datatables th {
+.cook-datatables th {
     padding: 6px;
 }
 .login-box, .register-box {
