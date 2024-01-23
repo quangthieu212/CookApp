@@ -1,0 +1,17 @@
+.app-container {
+    min-height: 350px;
+}
+@media (min-width: 640px) { 
+    .w-300
+{
+    width: 300px !important;
+}
+.w-250
+{
+    width: 250px !important;
+}
+.w-200
+{
+    width: 200px !important;
+}
+}

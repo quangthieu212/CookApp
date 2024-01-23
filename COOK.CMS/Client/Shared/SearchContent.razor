@@ -1,0 +1,58 @@
+﻿<!-- Content Header (Page header) -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0 text-dark">@Title</h1>
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content-header -->
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <aside class="control-sidebar control-sidebar-light search">
+            <!-- Control sidebar content goes here -->
+            <div id="searchForm" class="p-3 control-sidebar-content">
+                <h5>Tìm kiếm</h5><hr class="mb-2" />
+                <form class="saa-search-form">
+                    @SearchForm
+                </form>
+            </div>
+        </aside>
+        <div class="row">
+            <div class="card col-12">
+                <div class="card-header">
+                    <h5 class="card-title">&nbsp;</h5>
+                    <div class="card-tools">
+                       @Actions
+                    </div>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    @Body
+                </div>
+                <!-- ./card-body -->
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+
+@code {
+    [Parameter]
+    public RenderFragment Body { get; set; }
+
+    [Parameter]
+    public RenderFragment Title { get; set; }
+
+    [Parameter]
+    public RenderFragment Actions { get; set; }
+
+    [Parameter]
+    public RenderFragment SearchForm { get; set; }
+}

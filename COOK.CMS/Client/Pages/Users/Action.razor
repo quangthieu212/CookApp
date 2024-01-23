@@ -1,0 +1,59 @@
+﻿@page "/User/action"
+@page "/User/action/{Id}"
+
+<EditContent>
+    <Title><Language Key="Quản lý người dùng" Page="Users" /></Title>
+    <Header><Language Key="@headTitle" Page="Users" /></Header>
+    <Body>
+        <EditForm Model="@user" class="col-12 row form-horizontal form">
+            <Field LableWidth="col-sm-3" FieldWidth="col-sm-9" For="@nameof(user.grp_id)" Class="col-6 row">
+                <Lable><Language Key="Nhóm" Page="Users" /></Lable>
+                <Body>
+                    <select class="form-control form-control-sm" @bind="user.grp_id">
+                        <option value="Select" selected disabled="disabled">(Chọn nhóm)</option>
+                        @foreach (var type in listType)
+                        {
+                            <option value="@type.value">@type.key</option>
+                        }
+                    </select>
+                </Body>
+            </Field>
+            <Field LableWidth="col-sm-3" FieldWidth="col-sm-9" For="@nameof(user.user_id)" Class="col-6 row">
+                <Lable><Language Key="Tên đăng nhập" Page="Users" /></Lable>
+                <Body>
+                    <input type="text" name="@nameof(user.user_id)" @bind="user.user_id" class="form-control form-control-sm" id="@nameof(user.user_id)" />
+                </Body>
+            </Field>
+            <Field LableWidth="col-sm-3" FieldWidth="col-sm-9" For="@nameof(user.user_pass)" Class="col-6 row">
+                <Lable><Language Key="Mật khẩu" Page="Users" /></Lable>
+                <Body>
+                    <input type="text" name="@nameof(user.user_pass)" @bind="user.user_pass" class="form-control form-control-sm" id="@nameof(user.user_pass)" />
+                </Body>
+            </Field>
+            <Field LableWidth="col-sm-3" FieldWidth="col-sm-9" For="@nameof(user.user_name)" Class="col-6 row">
+                <Lable><Language Key="Tên người dùng" Page="Users" /></Lable>
+                <Body>
+                    <input type="text" name="@nameof(user.user_name)" @bind="user.user_name" class="form-control form-control-sm" id="@nameof(user.user_name)" />
+                </Body>
+            </Field>
+        </EditForm>
+    </Body>
+    <Actions>
+        <button type="button" @onclick="back" class="btn btn-default float-right"><Language Key="Hủy" Page="Users" /></button>
+        <button type="button" disabled="@isSaveProcess" @onclick="Save" class="btn btn-info float-right mr-2 sam-action"><Language Key="Lưu" Page="Users" /></button>
+    </Actions>
+</EditContent>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await Init();
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await ImportJS();
+        }
+    }
+}

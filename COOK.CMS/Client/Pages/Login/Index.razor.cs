@@ -7,6 +7,7 @@ using COOK.CMS.Client.Constants;
 using COOK.CMS.Shared.ViewModels;
 using COOK.CMS.Shared.Models;
 using COOK.CMS.Shared.Dtos.Requests;
+using COOK.CMS.Client.Helper;
 
 namespace COOK.CMS.Client.Pages.Login
 {
@@ -17,7 +18,11 @@ namespace COOK.CMS.Client.Pages.Login
         public PageCommon _pageCommon { get; set; }
 
         private string _error { get; set; }
-
+        public async Task Init()
+        {
+            _pageCommon._module = await ClientUtils.ImportJS(Javascript, "Users.js");
+            await _pageCommon._module.InvokeVoidAsync("IsValidate");
+        }
         public async Task Login()
         {           
             var response = await Apis.PostAsJsonAsync<LoginRequest>("api/login", _loginRequest);
@@ -36,7 +41,8 @@ namespace COOK.CMS.Client.Pages.Login
 
             await Session.RemoveItemAsync(AppConstant.SESSION_LOGIN);
             await Session.SetItemAsync<SessionInfo>(AppConstant.SESSION_LOGIN, sessionInfo);
-            await Javascript.InvokeVoidAsync("redirect", "index2.html");
+            Route.NavigateTo("/Users");
+            //await Javascript.InvokeVoidAsync("redirect", "index2.html");
         }
     }
 }

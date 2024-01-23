@@ -1,0 +1,64 @@
+﻿@page "/Users"
+
+<SearchContent>
+    <Title>Danh sách người dùng</Title>
+    <SearchForm>
+        <div id="searchGroup">
+            <div class="form-group">
+                <label for="user_name">Name</label>
+                <input name="user_name" class="form-control form-control-sm" type="text" id="user_name" />
+            </div>
+            <div class="form-group">
+                <label for="user_phone">Phone</label>
+                <input name="user_phone" class="form-control form-control-sm" type="text" id="user_phone" />
+            </div>
+            <div class="form-group">
+                <label for="user_email">Email</label>
+                <input name="user_email" class="form-control form-control-sm" type="text" id="user_email" />
+            </div>
+        </div>
+
+        <button type="button" @onclick="(e)=>Search()" class="btn btn-default btn-sm">
+            Tìm kiếm
+        </button>
+        <button type="button" data-widget="control-sidebar" data-slide="true" class="btn btn-default btn-sm ml-2">
+            Đóng
+        </button>
+    </SearchForm>
+    <Actions>
+        <button type="button" @onclick="AddNew" class="btn btn-default btn-sm">
+            <i class="fas fa-plus"></i> Thêm mới
+        </button>
+        <button type="button" data-widget="control-sidebar" data-slide="true" class="btn btn-default btn-sm">
+            <i class="fas fa-search"></i> Tìm kiếm
+        </button>
+    </Actions>
+    <Body>
+        <table data-url="/api/Users" class="display table table-bordered table-striped cook-datatables">
+            <thead>
+                <tr>
+                    <th data-field="user_id" data-name="user_id" scope="col" style="text-align: center;">ID</th>
+                    <th data-field="user_name" data-name="user_name" scope="col">Name</th>
+                    <th data-field="user_address" data-name="user_address" scope="col">Address</th>
+                    <th data-field="user_phone" data-name="user_phone" scope="col">Phone</th>
+                    <th data-field="user_email" data-name="user_email" scope="col">Email</th>
+                    <th scope="col" >Action</th>
+                </tr>
+            </thead>
+        </table>
+        <div>@uri</div>
+    </Body>
+</SearchContent>
+
+@code {
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await Init();
+        }
+
+    }
+
+}

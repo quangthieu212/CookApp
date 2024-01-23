@@ -24,7 +24,7 @@
         public const string Del_Api = "deleteUser/{id}";
         public const string List_Api = "Users";
         public const string GetById_Api = "getUserById/{id}";
-        public const string GetByName_Api = "getUserByName/{name}";
+        public const string GetByUserId_Api = "getByUserId/{user_id}";
         //Category
         public const string Add_Category_Api = "addCategory";
         public const string Update_Category_Api = "updateCategory/{id}";

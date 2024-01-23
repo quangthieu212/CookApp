@@ -42,7 +42,6 @@
 
   <ItemGroup>
     <Folder Include="ModelForms\" />
-    <Folder Include="wwwroot\app\pages\" />
   </ItemGroup>
 
   <ItemGroup>

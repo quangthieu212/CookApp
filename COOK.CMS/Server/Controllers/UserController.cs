@@ -2,6 +2,7 @@
 using COOK.CMS.Business.Services.IServices;
 using COOK.CMS.Shared;
 using COOK.CMS.Shared.Dtos.Requests;
+using COOK.CMS.Shared.ViewModels;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -67,7 +68,7 @@ namespace COOK.CMS.Server.Controllers
         }
         [HttpPost]
         //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [Route(Constant.List_Api)]
+        [Route("list")]
         public IActionResult GetUsers(string type, [FromBody] RequestFilters filter, string softField = "id", string softType = "asc")
         {
             var response = _userService.Users(type, filter, softField, softType);
@@ -81,10 +82,10 @@ namespace COOK.CMS.Server.Controllers
             return Convert(response.Code, response, response.Data);
         }
         [HttpGet]
-        [Route(Constant.GetByName_Api)]
-        public IActionResult GetUserByName(string name)
+        [Route(Constant.GetByUserId_Api)]
+        public IActionResult GetUserByUserId(string user_id)
         {
-            var response = _userService.getByUserName(name);
+            var response = _userService.getByUserId(user_id);
             return Convert(response.Code, response, response.Data);
         }
         [HttpPost]
@@ -94,6 +95,22 @@ namespace COOK.CMS.Server.Controllers
             var response = _userService.AddRole(request);
             return Convert(response.Code, response, response.Data);
         }
-
+        [HttpPost]
+        [Route(Constant.List_Api)]
+        public IActionResult GetUsers([FromForm] PagingForm pagingForm, [FromQuery] UserSearchForm searchForm)
+        {
+            return Ok(_userService.Search(pagingForm, searchForm));
+        }
+        [HttpPost]
+        [Route("CheckExists")]
+        public bool CheckExists([FromForm] string user_id)
+        {
+            var user = _userService.getByUserId(user_id);
+            if (user == null || user.Data == null)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

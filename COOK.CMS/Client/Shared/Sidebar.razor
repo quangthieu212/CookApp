@@ -1,0 +1,69 @@
+﻿@using CMS.Shared.ViewModels
+@using Constants
+<!-- Main Sidebar Container -->
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="/" class="brand-link">
+        <img src="dist/img/AdminLTELogo.png" alt="Cook Solutions" class="brand-image img-circle elevation-3"
+             style="opacity: .8">
+        <span class="brand-text font-weight-light">Cook Solutions</span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column nav-flat text-sm" data-widget="treeview" role="menu" data-accordion="false">
+                <!-- Add icons to the links using the .nav-icon class
+                with font-awesome or any other icon font library -->
+
+                @foreach (var item in Permissions) 
+                { 
+                    if (item.is_menu == true)
+                    {
+                    <li class="nav-item has-treeview">
+                        <a href="#" class="nav-link">
+                            <i class="@item.rol_icon"></i>
+                            <p>
+                                @item.rol_name
+                                <i class="fas fa-angle-left right"></i>
+                                <span class="badge badge-info right"></span>
+                            </p>
+                        </a>
+                            @if (item.Permissions.Count > 0)
+                        {
+                    <ul class="nav nav-treeview">
+                                    @foreach (var v in item.Permissions.OrderBy(c => c.rol_order).ToList<Role>())
+                        {
+                            if (item.is_menu == true)
+                            {
+                                <li class="nav-item">
+                                    <a href="@v.rol_controller" class="nav-link">
+                                        <i class="@v.rol_icon"></i>
+                                        <p>@v.rol_name</p>
+                                    </a>
+                                </li>
+
+                            }
+                        }
+
+                    </ul>                    
+                    }
+                    </li>
+                    }
+                
+                }
+            </ul>
+        </nav>
+        <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+</aside>
+@code {
+    List<Role> Permissions { get; set; } = new List<Role>();
+    protected override async Task OnInitializedAsync()
+    {
+        SessionInfo session = await Session.GetItemAsync<SessionInfo>(AppConstant.SESSION_LOGIN);
+        Permissions = session.User.roles.OrderBy(c => c.rol_order).ToList<Role>();
+    }
+}

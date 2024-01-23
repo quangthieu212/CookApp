@@ -8,8 +8,10 @@ using COOK.CMS.Shared;
 using COOK.CMS.Shared.Dtos.Requests;
 using COOK.CMS.Shared.Dtos.Responses;
 using COOK.CMS.Shared.Models;
+using COOK.CMS.Shared.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.VisualBasic;
+using MySqlX.XDevAPI.Common;
 
 namespace COOK.CMS.Business.Services
 {
@@ -169,13 +171,16 @@ namespace COOK.CMS.Business.Services
                     //get role of user
                     List<Role> roles = new List<Role>();
                     var user_roles = _context.User_Role.AsQueryable().Where(o => o.user_id.Equals(existingUser.user_id)).AsEnumerable();
+                    var rolesList = _context.Role.AsQueryable().Where(r => r.rol_status == true).ToList();
                     if (user_roles != null && user_roles.Any())
                     {
                         foreach (var role in user_roles)
                         {
-                            var roleItem = _context.Role.AsQueryable().Where(r => r.id == role.rol_id && r.rol_status == true).FirstOrDefault();
+                            var roleItem = rolesList.Where(r => r.id == role.rol_id && r.rol_status == true && r.rol_parrent == null).FirstOrDefault();
                             if (roleItem != null)
                             {
+                                var rolChild = rolesList.Where(c => c.rol_parrent == roleItem.id).ToList();
+                                roleItem.Permissions = rolChild;
                                 roles.Add(roleItem);
                             }
                         }
@@ -252,6 +257,40 @@ namespace COOK.CMS.Business.Services
             return jsonData;
         }
 
+        public PagingResponseForm Search(PagingForm pagingForm, UserSearchForm searchForm)
+        {
+            List<User> Users = _context.User.AsQueryable().Where(o => o != null).ToList();
+            if (pagingForm.search.value != null && pagingForm.search.value.Length > 0)
+            {
+                Users = Users.Where(o => (o.user_id != null && o.user_id.Contains(pagingForm.search.value))
+                       || (o.user_name != null && o.user_name.Contains(pagingForm.search.value))
+                       || (o.user_address != null && o.user_address.Contains(pagingForm.search.value))
+                       || (o.user_phone != null && o.user_phone.Contains(pagingForm.search.value))
+                       || (o.user_email != null && o.user_email.Contains(pagingForm.search.value))
+                       ).ToList();
+            }
+            if (searchForm.user_name != null && searchForm.user_name.Length > 0)
+            {
+                Users = Users.Where(u => u.user_name.Contains(searchForm.user_name)).ToList();
+            }
+            if (searchForm.user_phone != null && searchForm.user_phone.Length > 0)
+            {
+                Users = Users.Where(u => u.user_phone.Contains(searchForm.user_phone)).ToList();
+            }
+            if (searchForm.user_email != null && searchForm.user_email.Length > 0)
+            {
+                Users = Users.Where(u => u.user_email.Contains(searchForm.user_email)).ToList();
+            }
+
+            int totalrow = Users.Count;
+            var takeSize = pagingForm.length != 0 ? Convert.ToInt32(pagingForm.length) : Constant.ITEM_PER_PAGE;// i.e. ItemsPerPage = 25
+            var skipSize = pagingForm.start;
+            List<User> results = new List<User>();
+            results = Users.Skip(skipSize).Take(takeSize).ToList();
+            var jsonData = new PagingResponseForm { draw = pagingForm.draw.ToString(), recordsFiltered = totalrow, recordsTotal = totalrow, data = results };
+            return jsonData;
+        }
+
         public ApiResponse<User> getById(long id)
         {
             ApiResponse<User> response = new ApiResponse<User>();
@@ -269,11 +308,12 @@ namespace COOK.CMS.Business.Services
                 //get role of user
                 List<Role> roles = new List<Role>();
                 var user_roles = _context.User_Role.AsQueryable().Where(o => o.user_id.Equals(user.user_id)).AsEnumerable();
+                var rolesList = _context.Role.AsQueryable().Where(r => r.rol_status == true).ToList();
                 if (user_roles != null && user_roles.Any())
                 {
                     foreach (var role in user_roles)
                     {
-                        var roleItem = _context.Role.AsQueryable().Where(r => r.id == role.rol_id && r.rol_status == true).FirstOrDefault();
+                        var roleItem = rolesList.Where(r => r.id == role.rol_id && r.rol_status == true).FirstOrDefault();
                         if (roleItem != null)
                         {
                             roles.Add(roleItem);
@@ -286,12 +326,12 @@ namespace COOK.CMS.Business.Services
             return response;
         }
 
-        public ApiResponse<User> getByUserName(string name)
+        public ApiResponse<User> getByUserId(string user_id)
         {
             ApiResponse<User> response = new ApiResponse<User>();
             response.isSuccess = true;
             response.Code = StatusCodes.Status200OK.ToString();
-            var user = _context.User.AsQueryable().Where(o => o.user_id.ToLower().Equals(name.ToLower())).FirstOrDefault();
+            var user = _context.User.AsQueryable().Where(o => o.user_id.ToLower().Equals(user_id.ToLower())).FirstOrDefault();
             if (user == null)
             {
                 response.isSuccess = false;
@@ -303,11 +343,12 @@ namespace COOK.CMS.Business.Services
                 //get role of user
                 List<Role> roles = new List<Role>();
                 var user_roles = _context.User_Role.AsQueryable().Where(o => o.user_id.Equals(user.user_id)).AsEnumerable();
+                var rolesList = _context.Role.AsQueryable().Where(r => r.rol_status == true).ToList();
                 if (user_roles != null && user_roles.Any())
                 {
                     foreach (var role in user_roles)
                     {
-                        var roleItem = _context.Role.AsQueryable().Where(r => r.id == role.rol_id && r.rol_status == true).FirstOrDefault();
+                        var roleItem = rolesList.Where(r => r.id == role.rol_id && r.rol_status == true).FirstOrDefault();
                         if (roleItem != null)
                         {
                             roles.Add(roleItem);
@@ -420,6 +461,7 @@ namespace COOK.CMS.Business.Services
             role.rol_order = roleRequest.rol_order;
             role.rol_status = roleRequest.rol_status;
             role.is_menu = roleRequest.is_menu;
+            role.rol_parrent = roleRequest.rol_parrent;
             _context.Add(role);
             _context.SaveChanges();
             response.Data = role;
